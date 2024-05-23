@@ -1,4 +1,4 @@
-package com.zarphex.initial.Features.Calendar;
+package com.zarphex.Features.Calendar;
 import java.util.ArrayList;
 
 public class CalendarFeature {

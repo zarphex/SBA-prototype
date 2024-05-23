@@ -1,7 +1,7 @@
-package com.zarphex.initial.Features;
-import com.zarphex.initial.Features.Calendar.CalendarFeature;
+package com.zarphex.Features;
 
-import java.time.*;
+import com.zarphex.Features.Calendar.CalendarFeature;
+import java.time.Duration;
 
 public class DeepFocusTracker {
     private Duration focusDurationTotal;

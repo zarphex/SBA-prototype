@@ -1,4 +1,4 @@
-package com.zarphex.initial.Features;
+package com.zarphex.Features;
 
 import java.util.ArrayList;
 

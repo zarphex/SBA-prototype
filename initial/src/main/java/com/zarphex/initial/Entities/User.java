@@ -1,4 +1,6 @@
-package com.zarphex.initial;
+package com.zarphex.initial.Entities;
+
+import com.zarphex.initial.Entities.Achievement;
 
 import java.util.ArrayList;
 

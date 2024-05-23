@@ -1,5 +1,6 @@
-package com.zarphex.initial.Features;
-import java.time.*;
+package com.zarphex.Features;
+
+import java.time.Duration;
 
 public class PomodoroTimer extends Timer {
     private final int DEFAULT_WORK_TIMER = 25;
