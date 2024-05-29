@@ -1,37 +1,28 @@
 package com.zarphex.Features;
 
+import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
 import java.util.Properties;
 
 public abstract class Feature {
-    private final ImageIcon LEFT_ARROW_ICON, RIGHT_ARROW_ICON;
     private final JButton LEFT_ARROW, RIGHT_ARROW;
     private final JPanel PANEL;
 
     public Feature(Properties props) {
         PANEL = new JPanel();
-        LEFT_ARROW_ICON = new ImageIcon(props.getProperty("leftArrowImage"));
-        LEFT_ARROW = new JButton(LEFT_ARROW_ICON);
-        RIGHT_ARROW_ICON = new ImageIcon(props.getProperty("rightArrowImage"));
-        RIGHT_ARROW = new JButton(RIGHT_ARROW_ICON);
-
-        // Add action listeners to the buttons.
-        LEFT_ARROW.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-        RIGHT_ARROW.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
+        LEFT_ARROW = new JButton(new ImageIcon(props.getProperty("leftArrowImage")));
+        RIGHT_ARROW = new JButton(new ImageIcon(props.getProperty("rightArrowImage")));
     }
 
+    public void createGUI() {
+        // Fix layout and background of the panel.
+        PANEL.setLayout(new MigLayout("insets 0, al center center, debug"));
+        PANEL.setBackground(new Color(0xFAEED1));
+
+        PANEL.add(LEFT_ARROW, "al left bottom");
+        PANEL.add(RIGHT_ARROW, "al right bottom, push, wrap");
+    }
     public JPanel getPanel() {
         return PANEL;
     }

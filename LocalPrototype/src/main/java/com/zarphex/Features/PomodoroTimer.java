@@ -2,7 +2,7 @@ package com.zarphex.Features;
 
 import java.time.Duration;
 
-public class PomodoroTimer extends Timer {
+public class PomodoroTimer {
     private final int DEFAULT_WORK_TIMER = 25;
     private final int DEFAULT_SHORT_BREAK = 5;
     private final int DEFAULT_LONG_BREAK = 10;

@@ -1,11 +1,7 @@
 package com.zarphex.Features;
 
-import net.miginfocom.swing.MigLayout;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Properties;
@@ -29,26 +25,20 @@ public class Clock extends Feature {
 
         // Instantiate the panel and image entities.
         FORMAT_CHANGE_BUTTON = new JButton("Change Mode");
-        createGUI(props);
+        createGUI();
     }
 
     /**
      * Create the GUI with relevant displays.
-     * @param props: Properties file.
      */
-    public void createGUI(Properties props) {
-        // Fix layout and background of the panel.
-        getPanel().setLayout(new MigLayout("insets 0, al center center, debug"));
-        getPanel().setBackground(new Color(0xFAEED1));
-
+    public void createGUI() {
+        super.createGUI();
         makeClock();
 
         // Add elements to the panel.
         getPanel().add(CLOCK_LABEL, "al center bottom, span, push, wrap");
         getPanel().add(DATE_LABEL, "al center, span, wrap");
         getPanel().add(FORMAT_CHANGE_BUTTON, "al center, span, wrap");
-        getPanel().add(getLEFT_ARROW(), "al left bottom");
-        getPanel().add(getRIGHT_ARROW(), "al right bottom, push, wrap");
     }
 
     /**
@@ -62,12 +52,7 @@ public class Clock extends Feature {
         // Format labels
         CLOCK_LABEL.setFont(new Font("Arial", Font.PLAIN, 24));
         DATE_LABEL.setFont(new Font("Arial", Font.PLAIN, 24));
-        FORMAT_CHANGE_BUTTON.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                changeMode();
-            }
-        });
+        FORMAT_CHANGE_BUTTON.addActionListener(e -> changeMode());
 
         // Create and start the timer.
         Timer timer = new Timer(1000, e -> updateTime());

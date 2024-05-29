@@ -1,30 +1,29 @@
 package com.zarphex.Features;
 
-import java.time.Duration;
+import javax.swing.*;
+import java.util.Properties;
 
-public class Timer {
-    private final int TIME_DECREMENT = 1;
-    private Duration currentTimer, setTimer;
-    private String currentAlarmSound;
-    private boolean isTimerPaused = false;
+public class Timer extends Feature {
+    private final JLabel TIMER_LABEL;
+    private final JButton START_TIMER, PAUSE_TIMER, RESET_TIMER;
 
-    public Timer() {
-        this.currentTimer = Duration.ZERO;
+    public Timer(Properties props) {
+        super(props);
+
+        TIMER_LABEL = new JLabel("a");
+        START_TIMER = new JButton("Start");
+        PAUSE_TIMER = new JButton("Pause");
+        RESET_TIMER = new JButton("Reset");
+        createGUI();
     }
 
-    public void startTimer() {
-        if (!isTimerPaused) {
-            currentTimer = currentTimer.minusSeconds(TIME_DECREMENT);
-        }
+    public void createGUI() {
+        super.createGUI();
+
+        // Add elements to the panel.
+        getPanel().add(TIMER_LABEL, "al center, span, wrap");
+        getPanel().add(START_TIMER, "al center, span, wrap");
+        getPanel().add(PAUSE_TIMER, "al center, span, wrap");
+        getPanel().add(RESET_TIMER, "al center, span, wrap");
     }
-    public void pauseTimer() {
-        isTimerPaused = !isTimerPaused;
-    }
-    public void resetTimer() {
-        currentTimer = setTimer;
-    }
-    public void restartTimer() {
-        currentTimer = Duration.ZERO;
-    }
-    public void setCurrentAlarmSound(String alarm) {}
 }
