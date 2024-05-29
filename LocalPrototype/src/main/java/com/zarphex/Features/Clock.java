@@ -31,14 +31,15 @@ public class Clock extends Feature {
     /**
      * Create the GUI with relevant displays.
      */
+    @Override
     public void createGUI() {
         super.createGUI();
         makeClock();
 
         // Add elements to the panel.
-        getPanel().add(CLOCK_LABEL, "al center bottom, span, push, wrap");
+        getPanel().add(CLOCK_LABEL, "al center, span, wrap");
         getPanel().add(DATE_LABEL, "al center, span, wrap");
-        getPanel().add(FORMAT_CHANGE_BUTTON, "al center, span, wrap");
+        getPanel().add(FORMAT_CHANGE_BUTTON, "al center top, span, push, wrap");
     }
 
     /**

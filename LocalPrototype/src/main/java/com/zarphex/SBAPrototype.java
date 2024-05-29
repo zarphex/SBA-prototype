@@ -1,16 +1,14 @@
 package com.zarphex;
 
 import com.zarphex.Features.*;
-import com.zarphex.Features.Timer;
 
 import javax.swing.*;
 import java.util.Properties;
 
 public class SBAPrototype {
-    private final Clock clock;
-    private final Timer timer;
+    private final Feature clock, timer, stopwatch, pomodoroTimer;
     private final JFrame FRAME;
-    private static final Feature[] featureList = new Feature[2];
+    private static final Feature[] featureList = new Feature[4];
 
     public SBAPrototype(Properties props) {
         FRAME = new JFrame();
@@ -18,11 +16,11 @@ public class SBAPrototype {
         createGUI(props);
 
         // Create default features.
-        clock = new Clock(props);
-        timer = new Timer(props);
+        featureList[0] = clock = new Clock(props);
+        featureList[1] = timer = new TimerFeature(props);
+        featureList[2] = stopwatch = new Stopwatch(props);
+        featureList[3] = pomodoroTimer = new PomodoroTimer(props);
 
-        featureList[0] = clock;
-        featureList[1] = timer;
         FRAME.add(clock.getPanel());
         addFeatureSwapButton(0);
         FRAME.setVisible(true);
