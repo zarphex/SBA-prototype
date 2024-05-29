@@ -16,15 +16,15 @@ public class Clock extends Feature {
     private JLabel DATE_LABEL;
     private boolean isTwentyFourHour;
 
-    /***
+    /**
      * The default constructor.
      */
     public Clock(Properties props) {
         super(props);
         this.isTwentyFourHour = false;
 
-        // Instantiate the panel and image entities.
         FORMAT_CHANGE_BUTTON = new JButton("Change Mode");
+
         createGUI();
     }
 
@@ -36,7 +36,7 @@ public class Clock extends Feature {
         super.createGUI();
         makeClock();
 
-        // Add elements to the panel.
+        // Add components to the panel.
         getPanel().add(CLOCK_LABEL, "al center, span, wrap");
         getPanel().add(DATE_LABEL, "al center, span, wrap");
         getPanel().add(FORMAT_CHANGE_BUTTON, "al center top, span, push, wrap");
@@ -50,7 +50,7 @@ public class Clock extends Feature {
         CLOCK_LABEL = new JLabel();
         DATE_LABEL = new JLabel();
 
-        // Format labels
+        // Format components.
         CLOCK_LABEL.setFont(new Font("Arial", Font.PLAIN, 24));
         DATE_LABEL.setFont(new Font("Arial", Font.PLAIN, 24));
         FORMAT_CHANGE_BUTTON.addActionListener(e -> changeMode());
@@ -67,7 +67,7 @@ public class Clock extends Feature {
         LocalTime currentTime = LocalTime.now();
         LocalDate currentDate = LocalDate.now();
 
-        // Format displays.
+        // Format display of time and date.
         String timeDisplay = currentTime.format(isTwentyFourHour
                 ? DateTimeFormatter.ofPattern("HH:mm:ss")
                 : DateTimeFormatter.ofPattern("hh:mm:ss a"));
