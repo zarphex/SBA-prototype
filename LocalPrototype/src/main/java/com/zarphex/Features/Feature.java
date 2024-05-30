@@ -25,15 +25,18 @@ public abstract class Feature {
     /**
      * Skeleton method for drawing the GUI.
      */
-    public void createGUI() {
+    public void createGUI(Properties props) {
         // Fix layout and background of the panel.
-        PANEL.setLayout(new MigLayout("insets 0, al center center"));
-        PANEL.setBackground(new Color(0xFAEED1));
-
-        PANEL.add(LEFT_ARROW, "al left top");
-        PANEL.add(RIGHT_ARROW, "al right top, push, wrap");
+        PANEL.setLayout(new MigLayout("insets 0, al center center, debug"));
+        PANEL.setBackground(new Color(Integer.parseInt(props.getProperty("creamBackgroundR")),
+                Integer.parseInt(props.getProperty("creamBackgroundG")),
+                Integer.parseInt(props.getProperty("creamBackgroundB"))));
     }
 
+    public void addArrowComponents() {
+        PANEL.add(LEFT_ARROW, "al left bottom");
+        PANEL.add(RIGHT_ARROW, "al right bottom, push, wrap");
+    }
     /**
      * Getter for the main Panel.
      * @return the panel.

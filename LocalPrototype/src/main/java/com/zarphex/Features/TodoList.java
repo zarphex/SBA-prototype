@@ -1,13 +1,23 @@
 package com.zarphex.Features;
 
 import java.util.ArrayList;
+import java.util.Properties;
 
-public class TodoList {
+public class TodoList extends Feature {
     private ArrayList<Task> taskList;
     private ArrayList<String> categoryList;
     private Priority priority;
 
-    public TodoList() {}
+    public TodoList(Properties props) {
+        super(props);
+
+        createGUI(props);
+    }
+
+    @Override
+    public void createGUI(Properties props) {
+        super.createGUI(props);
+    }
 
     public void createTask(Task task) {
         taskList.add(task);

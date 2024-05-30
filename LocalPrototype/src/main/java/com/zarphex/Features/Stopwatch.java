@@ -27,31 +27,32 @@ public class Stopwatch extends Feature {
         // Instantiate the components.
         STOPWATCH_LABEL = new JLabel();
         stopwatchLapsLabel = new ArrayList<>();
-        START_STOPWATCH = new JButton("start");
-        PAUSE_STOPWATCH = new JButton("pause");
-        LAP_STOPWATCH = new JButton("lap");
-        RESET_STOPWATCH = new JButton("reset");
+        START_STOPWATCH = new JButton(props.getProperty("startLabel"));
+        PAUSE_STOPWATCH = new JButton(props.getProperty("pauseLabel"));
+        LAP_STOPWATCH = new JButton(props.getProperty("lapLabel"));
+        RESET_STOPWATCH = new JButton(props.getProperty("resetLabel"));
 
-        createGUI();
+        createGUI(props);
+        addArrowComponents();
     }
 
     /**
      * Draw the GUI.
      */
     @Override
-    public void createGUI() {
-        super.createGUI();
+    public void createGUI(Properties props) {
+        super.createGUI(props);
 
         STOPWATCH_LABEL.setFont(new Font("Arial", Font.PLAIN, 24));
 
         makeStopwatch();
 
         // Add elements to the panel.
-        getPanel().add(STOPWATCH_LABEL, "al center, span, wrap");
+        getPanel().add(STOPWATCH_LABEL, "al center bottom, push, span, wrap");
         getPanel().add(START_STOPWATCH, "al center, span, wrap");
         getPanel().add(PAUSE_STOPWATCH, "al center, span, wrap");
         getPanel().add(LAP_STOPWATCH, "al center, span, wrap");
-        getPanel().add(RESET_STOPWATCH, "al center top, span, push, wrap");
+        getPanel().add(RESET_STOPWATCH, "al center, span, wrap");
     }
 
     /**

@@ -25,21 +25,23 @@ public class Clock extends Feature {
 
         FORMAT_CHANGE_BUTTON = new JButton("Change Mode");
 
-        createGUI();
+        createGUI(props);
     }
 
     /**
      * Create the GUI with relevant displays.
      */
     @Override
-    public void createGUI() {
-        super.createGUI();
+    public void createGUI(Properties props) {
+        super.createGUI(props);
         makeClock();
 
         // Add components to the panel.
-        getPanel().add(CLOCK_LABEL, "al center, span, wrap");
+        getPanel().add(CLOCK_LABEL, "al center bottom, span, push, wrap");
         getPanel().add(DATE_LABEL, "al center, span, wrap");
-        getPanel().add(FORMAT_CHANGE_BUTTON, "al center top, span, push, wrap");
+        getPanel().add(FORMAT_CHANGE_BUTTON, "al center, span, wrap");
+
+        addArrowComponents();
     }
 
     /**
