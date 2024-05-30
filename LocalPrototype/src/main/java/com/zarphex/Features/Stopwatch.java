@@ -1,5 +1,7 @@
 package com.zarphex.Features;
 
+import net.miginfocom.swing.MigLayout;
+
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalTime;
@@ -11,6 +13,7 @@ import java.util.Properties;
  * The stopwatch feature class with time tracking capabilities in hours, minutes and seconds.
  */
 public class Stopwatch extends TimerMeasurer {
+    private JPanel lapsPanel;
     private final JButton LAP_STOPWATCH;
     private ArrayList<JLabel> stopwatchLapsLabel;
 
@@ -22,6 +25,10 @@ public class Stopwatch extends TimerMeasurer {
         super(props);
 
         // Instantiate the components.
+        lapsPanel = new JPanel();
+        lapsPanel.setBackground(null);
+        lapsPanel.setLayout(new BoxLayout(lapsPanel, BoxLayout.Y_AXIS));
+
         stopwatchLapsLabel = new ArrayList<>();
         LAP_STOPWATCH = new JButton(props.getProperty("lapLabel"));
         formatButton(LAP_STOPWATCH);
@@ -67,10 +74,11 @@ public class Stopwatch extends TimerMeasurer {
     public void addLabels(Properties props) {
         // Add labels to the panel.
         getPanel().add(getTimerLabel(), "al center bottom, span, push, wrap");
-        getPanel().add(getSTART_TIMER(), "al center, span, wrap");
-        getPanel().add(getPAUSE_TIMER(), "al center, span, wrap");
-        getPanel().add(LAP_STOPWATCH, "al center, span, wrap");
+        getPanel().add(getSTART_TIMER(), "al center, split 4, span");
+        getPanel().add(getPAUSE_TIMER(), "al center, span");
+        getPanel().add(LAP_STOPWATCH, "al center, span");
         getPanel().add(getRESET_TIMER(), "al center, span, wrap");
+        getPanel().add(lapsPanel, "pos 0.5al 55%");
     }
 
     /**
@@ -93,23 +101,17 @@ public class Stopwatch extends TimerMeasurer {
         newLap.setText(time.format(DateTimeFormatter.ISO_LOCAL_TIME));
         // Add the label to the list of labels.
         stopwatchLapsLabel.add(newLap);
-
-        // Draw every label.
-        for (JLabel lap : stopwatchLapsLabel) {
-            getPanel().add(lap, "al center, top, span, wrap");
-        }
+        lapsPanel.add(newLap);
     }
 
     /**
      * Remove every lap recorded and redraw the entire panel.
      */
     public void deleteLaps() {
-        for (JLabel lap : stopwatchLapsLabel) {
-            getPanel().remove(lap);
-            getPanel().revalidate();
-            getPanel().repaint();
-        }
+        lapsPanel.removeAll();
         stopwatchLapsLabel.clear();
+        lapsPanel.revalidate();
+        lapsPanel.repaint();
     }
 
     /**

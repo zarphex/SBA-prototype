@@ -42,9 +42,9 @@ public abstract class TimerMeasurer extends Feature {
     public void addLabels(Properties props) {
         // Add labels to the panel.
         getPanel().add(TIMER_LABEL, "al center bottom, span, push, wrap");
-        getPanel().add(START_TIMER, "al center, span, wrap");
-        getPanel().add(PAUSE_TIMER, "al center, span, wrap");
-        getPanel().add(RESET_TIMER, "al center, span, wrap");
+        getPanel().add(START_TIMER, "al center, split, span");
+        getPanel().add(PAUSE_TIMER, "al center, split, span");
+        getPanel().add(RESET_TIMER, "al center, split, span, wrap");
     }
 
     /**
@@ -53,7 +53,7 @@ public abstract class TimerMeasurer extends Feature {
      */
     public void initialiseTimer(Properties props) {
         // Call to update the timer every second.
-        setTimerControl(new Timer(200, e -> updateTimer(props)));
+        setTimerControl(new Timer(1000, e -> updateTimer(props)));
 
         // Button action listeners.
         getSTART_TIMER().addActionListener(e -> getTimerControl().start());

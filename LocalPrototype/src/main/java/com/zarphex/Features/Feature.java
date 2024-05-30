@@ -43,7 +43,7 @@ public abstract class Feature {
      */
     public void createGUI(Properties props) {
         // Fix layout and background of the panel.
-        PANEL.setLayout(new MigLayout("insets 0, al center center, gapy 20"));
+        PANEL.setLayout(new MigLayout("al center bottom"));
         PANEL.setBackground(new Color(156,151,252));
         LEFT_ARROW.setForeground(new Color(156,151,252));
         RIGHT_ARROW.setForeground(new Color(156,151,252));
@@ -53,8 +53,8 @@ public abstract class Feature {
      * Add the arrow buttons to the screen.
      */
     public void addArrowComponents() {
-        PANEL.add(LEFT_ARROW, "al left bottom");
-        PANEL.add(RIGHT_ARROW, "al right bottom, push, wrap");
+        PANEL.add(LEFT_ARROW, "al left bottom, push");
+        PANEL.add(RIGHT_ARROW, "al right bottom, push, span, wrap");
     }
 
     // Getters

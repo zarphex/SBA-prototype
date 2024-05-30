@@ -40,9 +40,9 @@ public class Clock extends Feature {
         makeClock();
 
         // Add components to the panel.
-        getPanel().add(CLOCK_LABEL, "al center bottom, span, push, wrap");
+        getPanel().add(CLOCK_LABEL, "al center bottom, pushy, span, wrap");
         getPanel().add(DATE_LABEL, "al center, span, wrap");
-        getPanel().add(FORMAT_CHANGE_BUTTON, "al center, span, wrap");
+        getPanel().add(FORMAT_CHANGE_BUTTON, "al center, gapy 20, span, wrap");
 
         addArrowComponents();
     }
