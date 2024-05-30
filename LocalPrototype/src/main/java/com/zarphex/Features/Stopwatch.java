@@ -10,11 +10,8 @@ import java.util.Properties;
 /**
  * The stopwatch feature class with time tracking capabilities in hours, minutes and seconds.
  */
-public class Stopwatch extends Feature {
-    private final JLabel STOPWATCH_LABEL;
-    private final JButton START_STOPWATCH, PAUSE_STOPWATCH, LAP_STOPWATCH, RESET_STOPWATCH;
-    private LocalTime currentTime;
-    private Timer stopwatchControl;
+public class Stopwatch extends TimerMeasurer {
+    private final JButton LAP_STOPWATCH;
     private ArrayList<JLabel> stopwatchLapsLabel;
 
     /**
@@ -25,72 +22,64 @@ public class Stopwatch extends Feature {
         super(props);
 
         // Instantiate the components.
-        STOPWATCH_LABEL = new JLabel();
         stopwatchLapsLabel = new ArrayList<>();
-        START_STOPWATCH = new JButton(props.getProperty("startLabel"));
-        PAUSE_STOPWATCH = new JButton(props.getProperty("pauseLabel"));
         LAP_STOPWATCH = new JButton(props.getProperty("lapLabel"));
-        RESET_STOPWATCH = new JButton(props.getProperty("resetLabel"));
+        formatButton(LAP_STOPWATCH);
 
         createGUI(props);
+        initialiseTimer(props);
+        addLabels(props);
         addArrowComponents();
     }
 
     /**
-     * Draw the GUI.
+     * Create the stopwatch with all button functions.
+     * @param props: Properties file.
      */
     @Override
-    public void createGUI(Properties props) {
-        super.createGUI(props);
+    public void initialiseTimer(Properties props) {
+        // Call to update the stopwatch every second.
+        setTimerControl(new Timer(1000, e -> updateTimer(props)));
 
-        STOPWATCH_LABEL.setFont(new Font("Arial", Font.PLAIN, 24));
+        // Button action listeners.
+        getSTART_TIMER().addActionListener(e -> getTimerControl().start());
+        getPAUSE_TIMER().addActionListener(e -> getTimerControl().stop());
+        getRESET_TIMER().addActionListener(e -> {
+            getTimerControl().stop();
+            setSetTimer(LocalTime.MIN);
+            setCurrentTimer(getSetTimer());
+            deleteLaps();
+            drawTimer(props);
+        });
 
-        makeStopwatch();
+        // Set default stopwatch value.
+        setCurrentTimer(LocalTime.MIN);
+        drawTimer(props);
 
-        // Add elements to the panel.
-        getPanel().add(STOPWATCH_LABEL, "al center bottom, push, span, wrap");
-        getPanel().add(START_STOPWATCH, "al center, span, wrap");
-        getPanel().add(PAUSE_STOPWATCH, "al center, span, wrap");
-        getPanel().add(LAP_STOPWATCH, "al center, span, wrap");
-        getPanel().add(RESET_STOPWATCH, "al center, span, wrap");
+        LAP_STOPWATCH.addActionListener(e -> drawLap(getCurrentTimer()));
     }
 
     /**
-     * Create the stopwatch with all button functions.
+     * Add all components to the screen.
+     * @param props: Properties file.
      */
-    public void makeStopwatch() {
-        // Set default stopwatch value.
-        currentTime = LocalTime.MIN;
-        drawStopwatch();
-
-        // Call to update the stopwatch every second.
-        stopwatchControl = new Timer(1000, e -> updateStopwatch());
-
-        // Button functions.
-        START_STOPWATCH.addActionListener(e -> stopwatchControl.start());
-        PAUSE_STOPWATCH.addActionListener(e -> stopwatchControl.stop());
-        LAP_STOPWATCH.addActionListener(e -> drawLap(currentTime));
-        RESET_STOPWATCH.addActionListener(e -> {
-            stopwatchControl.stop();
-            currentTime = LocalTime.MIN;
-            drawStopwatch();
-            deleteLaps();
-        });
+    @Override
+    public void addLabels(Properties props) {
+        // Add labels to the panel.
+        getPanel().add(getTimerLabel(), "al center bottom, span, push, wrap");
+        getPanel().add(getSTART_TIMER(), "al center, span, wrap");
+        getPanel().add(getPAUSE_TIMER(), "al center, span, wrap");
+        getPanel().add(LAP_STOPWATCH, "al center, span, wrap");
+        getPanel().add(getRESET_TIMER(), "al center, span, wrap");
     }
 
     /**
      * Add a second to the stopwatch and draw it.
+     * @param props
      */
-    public void updateStopwatch() {
-        currentTime = currentTime.plusSeconds(1);
-        drawStopwatch();
-    }
-
-    /**
-     * Display the stopwatch in the valid format.
-     */
-    public void drawStopwatch() {
-        STOPWATCH_LABEL.setText(currentTime.format(DateTimeFormatter.ISO_LOCAL_TIME));
+    public void updateTimer(Properties props) {
+        setCurrentTimer(getCurrentTimer().plusSeconds(1));
+        drawTimer(props);
     }
 
     /**
@@ -100,7 +89,7 @@ public class Stopwatch extends Feature {
     public void drawLap(LocalTime time) {
         // Create new Label component.
         JLabel newLap = new JLabel();
-        newLap.setFont(new Font("Arial", Font.PLAIN, 12));
+        newLap.setFont(new Font(getFont(), Font.PLAIN, 12));
         newLap.setText(time.format(DateTimeFormatter.ISO_LOCAL_TIME));
         // Add the label to the list of labels.
         stopwatchLapsLabel.add(newLap);
@@ -121,5 +110,13 @@ public class Stopwatch extends Feature {
             getPanel().repaint();
         }
         stopwatchLapsLabel.clear();
+    }
+
+    /**
+     * Display the stopwatch in the valid format.
+     * @param props: Properties file.
+     */
+    public void drawTimer(Properties props) {
+        getTimerLabel().setText(getCurrentTimer().format(DateTimeFormatter.ISO_LOCAL_TIME));
     }
 }

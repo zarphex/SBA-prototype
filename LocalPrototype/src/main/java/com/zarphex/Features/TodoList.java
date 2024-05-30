@@ -12,6 +12,7 @@ public class TodoList extends Feature {
         super(props);
 
         createGUI(props);
+        addArrowComponents();
     }
 
     @Override

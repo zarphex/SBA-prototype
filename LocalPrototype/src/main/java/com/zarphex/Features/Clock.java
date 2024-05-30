@@ -18,18 +18,21 @@ public class Clock extends Feature {
 
     /**
      * The default constructor.
+     * @param props: Properties file.
      */
     public Clock(Properties props) {
         super(props);
         this.isTwentyFourHour = false;
 
-        FORMAT_CHANGE_BUTTON = new JButton("Change Mode");
+        FORMAT_CHANGE_BUTTON = new JButton(props.getProperty("formatChangeText"));
+        formatButton(FORMAT_CHANGE_BUTTON);
 
         createGUI(props);
     }
 
     /**
      * Create the GUI with relevant displays.
+     * @param props: Properties file.
      */
     @Override
     public void createGUI(Properties props) {
@@ -53,8 +56,10 @@ public class Clock extends Feature {
         DATE_LABEL = new JLabel();
 
         // Format components.
-        CLOCK_LABEL.setFont(new Font("Arial", Font.PLAIN, 24));
-        DATE_LABEL.setFont(new Font("Arial", Font.PLAIN, 24));
+        CLOCK_LABEL.setFont(new Font(getFont(), Font.BOLD, 60));
+        CLOCK_LABEL.setForeground(new Color(250, 249,246));
+        DATE_LABEL.setFont(new Font(getFont(), Font.BOLD, 18));
+        DATE_LABEL.setForeground(new Color(250, 249,246));
         FORMAT_CHANGE_BUTTON.addActionListener(e -> changeMode());
 
         // Create and start the timer.

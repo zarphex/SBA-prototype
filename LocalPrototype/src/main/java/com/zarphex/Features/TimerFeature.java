@@ -21,7 +21,8 @@ public class TimerFeature extends TimerMeasurer {
     }
 
     /**
-     * Create the timer with button functioning.
+     * Initialise timer.
+     * @param props: Properties file.
      */
     public void initialiseTimer(Properties props) {
         super.initialiseTimer(props);
@@ -32,7 +33,8 @@ public class TimerFeature extends TimerMeasurer {
     }
 
     /**
-     * Update the display of the timer.
+     * Update the timer with the next time.
+     * @param props: Properties file.
      */
     public void updateTimer(Properties props) {
         // Count down but stop when timer reaches zero.
@@ -46,6 +48,7 @@ public class TimerFeature extends TimerMeasurer {
 
     /**
      * Draw the timer display.
+     * @param props: Properties file.
      */
     public void drawTimer(Properties props) {
         getTimerLabel().setText(getCurrentTimer().format(DateTimeFormatter.ISO_LOCAL_TIME));

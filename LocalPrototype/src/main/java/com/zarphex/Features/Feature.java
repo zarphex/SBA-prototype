@@ -11,53 +11,66 @@ import java.util.Properties;
 public abstract class Feature {
     private final JButton LEFT_ARROW, RIGHT_ARROW;
     private final JPanel PANEL;
+    private final String font;
 
     /**
      * Default constructor.
      * @param props: Properties file.
      */
-    public Feature(Properties props) {
+    public Feature(Properties props){
+        font = props.getProperty("fontFile");
         PANEL = new JPanel();
+
         LEFT_ARROW = new JButton(new ImageIcon(props.getProperty("leftArrowImage")));
+        LEFT_ARROW.setBorderPainted(false);
         RIGHT_ARROW = new JButton(new ImageIcon(props.getProperty("rightArrowImage")));
+        RIGHT_ARROW.setBorderPainted(false);
     }
 
     /**
-     * Skeleton method for drawing the GUI.
+     * Adjust the size and colours for the interactive button.
+     * @param button: The button to format.
+     */
+    public void formatButton(JButton button) {
+        button.setPreferredSize(new Dimension(100, 40));
+        button.setBackground(new Color(237, 234, 222));
+        button.setForeground(new Color(128, 0 ,128));
+    }
+
+    /**
+     * Implement the GUI and display.
+     * @param props: Properties file.
      */
     public void createGUI(Properties props) {
         // Fix layout and background of the panel.
-        PANEL.setLayout(new MigLayout("insets 0, al center center, debug"));
-        PANEL.setBackground(new Color(Integer.parseInt(props.getProperty("creamBackgroundR")),
-                Integer.parseInt(props.getProperty("creamBackgroundG")),
-                Integer.parseInt(props.getProperty("creamBackgroundB"))));
+        PANEL.setLayout(new MigLayout("insets 0, al center center, gapy 20"));
+        PANEL.setBackground(new Color(156,151,252));
+        LEFT_ARROW.setForeground(new Color(156,151,252));
+        RIGHT_ARROW.setForeground(new Color(156,151,252));
     }
 
+    /**
+     * Add the arrow buttons to the screen.
+     */
     public void addArrowComponents() {
         PANEL.add(LEFT_ARROW, "al left bottom");
         PANEL.add(RIGHT_ARROW, "al right bottom, push, wrap");
     }
-    /**
-     * Getter for the main Panel.
-     * @return the panel.
-     */
+
+    // Getters
     public JPanel getPanel() {
         return PANEL;
     }
 
-    /**
-     * Getter for the left arrow button.
-     * @return the left arrow button.
-     */
     public JButton getLEFT_ARROW() {
         return LEFT_ARROW;
     }
 
-    /**
-     * Getter for the right arrow button.
-     * @return the right arrow button.
-     */
     public JButton getRIGHT_ARROW() {
         return RIGHT_ARROW;
+    }
+
+    public String getFont() {
+        return font;
     }
 }

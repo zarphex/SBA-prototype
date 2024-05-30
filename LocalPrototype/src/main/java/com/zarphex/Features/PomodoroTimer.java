@@ -31,9 +31,11 @@ public class PomodoroTimer extends TimerMeasurer {
         currentCycle = 1;
 
         MODE_LABEL = new JLabel();
-        MODE_LABEL.setFont(new Font("Arial", Font.ITALIC, 16));
+        MODE_LABEL.setFont(new Font(getFont(), Font.ITALIC, 16));
+        MODE_LABEL.setForeground(new Color(250, 249,246));
 
         SKIP_TIMER = new JButton(props.getProperty(SKIP_BUTTON_TEXT));
+        formatButton(SKIP_TIMER);
 
         workDuration = LocalTime.of(0, Integer.parseInt(props.getProperty("defaultWork")));
         shortBreakDuration = LocalTime.of(0, Integer.parseInt(props.getProperty("defaultShort")));
@@ -49,7 +51,9 @@ public class PomodoroTimer extends TimerMeasurer {
 
     /**
      * Create the pomodoro timer.
+     * @param props: Properties file.
      */
+    @Override
     public void initialiseTimer(Properties props) {
         super.initialiseTimer(props);
         setTimer(props, PomodoroStatus.WORK, workDuration);
@@ -59,6 +63,10 @@ public class PomodoroTimer extends TimerMeasurer {
         getPanel().add(MODE_LABEL, "al center, span, wrap");
     }
 
+    /**
+     * Start the respective timer.
+     * @param props: Properties file.
+     */
     public void updateTimer(Properties props) {
         if (currentStatus.equals(PomodoroStatus.WORK)) {
             startWorkTimer(props);
@@ -67,6 +75,10 @@ public class PomodoroTimer extends TimerMeasurer {
         }
     }
 
+    /**
+     * Start the focus timer.
+     * @param props: Properties file.
+     */
     public void startWorkTimer(Properties props) {
         if (!getCurrentTimer().equals(LocalTime.MIN)) {
             setCurrentTimer(getCurrentTimer().minusSeconds(1));
@@ -80,6 +92,10 @@ public class PomodoroTimer extends TimerMeasurer {
         }
     }
 
+    /**
+     * Start the break timer.
+     * @param props: Properties file.
+     */
     public void startBreakTimer(Properties props) {
         if (!getCurrentTimer().equals(LocalTime.MIN)) {
             setCurrentTimer(getCurrentTimer().minusSeconds(1));
@@ -89,6 +105,10 @@ public class PomodoroTimer extends TimerMeasurer {
         }
     }
 
+    /**
+     * Display the current timer.
+     * @param props: Properties file.
+     */
     public void drawTimer(Properties props) {
         String modeText = switch (currentStatus) {
             case WORK -> props.getProperty(WORK_TEXT);
@@ -99,6 +119,12 @@ public class PomodoroTimer extends TimerMeasurer {
         getTimerLabel().setText(getCurrentTimer().format(DateTimeFormatter.ISO_LOCAL_TIME));
     }
 
+    /**
+     * Set the new timer value.
+     * @param props: Properties file.
+     * @param newStatus: The next status of the timer.
+     * @param time: The time to be set.
+     */
     public void setTimer(Properties props, PomodoroStatus newStatus, LocalTime time) {
         currentStatus = newStatus;
         setSetTimer(time);
@@ -106,6 +132,10 @@ public class PomodoroTimer extends TimerMeasurer {
         drawTimer(props);
     }
 
+    /**
+     * Cycle to the new timer stage.
+     * @param props: Properties file.
+     */
     public void nextTimer(Properties props) {
         // Skip button action listener.
         getTimerControl().stop();
@@ -121,6 +151,9 @@ public class PomodoroTimer extends TimerMeasurer {
         }
     }
 
+    /**
+     * Enumeration options for the status of the timer.
+     */
     private enum PomodoroStatus {
         WORK,
         SHORT_BREAK,
