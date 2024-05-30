@@ -36,7 +36,7 @@ public abstract class TimerMeasurer extends Feature {
         getPanel().add(RESET_TIMER, "al center, span, wrap");
     }
 
-    public void makeTimer(Properties props) {
+    public void initialiseTimer(Properties props) {
         // Call to update the timer every second.
         setTimerControl(new Timer(1000, e -> updateTimer(props)));
 

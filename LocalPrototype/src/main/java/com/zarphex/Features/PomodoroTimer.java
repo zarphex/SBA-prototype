@@ -10,14 +10,17 @@ import javax.swing.*;
  * The Pomodoro Timer feature class for measuring durations of work and break.
  */
 public class PomodoroTimer extends TimerMeasurer {
-    private final JLabel modeLabel;
-    private final int DEFAULT_WORK_TIMER,
-                DEFAULT_SHORT_BREAK,
-                DEFAULT_LONG_BREAK,
-                DEFAULT_CYCLE_INTERVAL;
-    private LocalTime shortBreakLength, longBreakLength, workLength;
-    private int numberCyclesInterval, currentCycle;
-    private PomodoroStatus status;
+    private static final String WORK_TEXT = "workText";
+    private static final String SHORT_BREAK_TEXT = "shortText";
+    private static final String LONG_BREAK_TEXT = "longText";
+    private static final String SKIP_BUTTON_TEXT = "skipLabel";
+
+    private final JLabel MODE_LABEL;
+    private final JButton SKIP_TIMER;
+
+    private LocalTime shortBreakDuration, longBreakDuration, workDuration;
+    private int cyclesBeforeLongBreak, currentCycle;
+    private PomodoroStatus currentStatus;
 
     /**
      * The default constructor.
@@ -25,42 +28,39 @@ public class PomodoroTimer extends TimerMeasurer {
      */
     public PomodoroTimer(Properties props) {
         super(props);
-        status = PomodoroStatus.work;
         currentCycle = 1;
 
-        // Instantiate all components.
-        modeLabel = new JLabel();
-        modeLabel.setFont(new Font("Arial", Font.ITALIC, 16));
+        MODE_LABEL = new JLabel();
+        MODE_LABEL.setFont(new Font("Arial", Font.ITALIC, 16));
 
-        DEFAULT_WORK_TIMER = Integer.parseInt(props.getProperty("defaultWork"));
-        DEFAULT_SHORT_BREAK = Integer.parseInt(props.getProperty("defaultShort"));
-        DEFAULT_LONG_BREAK = Integer.parseInt(props.getProperty("defaultLong"));
-        DEFAULT_CYCLE_INTERVAL = Integer.parseInt(props.getProperty("defaultCycle"));
+        SKIP_TIMER = new JButton(props.getProperty(SKIP_BUTTON_TEXT));
 
-        shortBreakLength = LocalTime.of(0, 0, 3);
-        longBreakLength = LocalTime.of(0, DEFAULT_LONG_BREAK);
-        workLength = LocalTime.of(0, 0, 4);
-        numberCyclesInterval = DEFAULT_CYCLE_INTERVAL;
+        workDuration = LocalTime.of(0, Integer.parseInt(props.getProperty("defaultWork")));
+        shortBreakDuration = LocalTime.of(0, Integer.parseInt(props.getProperty("defaultShort")));
+        longBreakDuration = LocalTime.of(0, Integer.parseInt(props.getProperty("defaultLong")));
+        cyclesBeforeLongBreak = Integer.parseInt(props.getProperty("defaultCycle"));
 
         createGUI(props);
-        makeTimer(props);
+        initialiseTimer(props);
         addLabels(props);
+        getPanel().add(SKIP_TIMER, "al center, span, wrap");
         addArrowComponents();
     }
 
     /**
      * Create the pomodoro timer.
      */
-    public void makeTimer(Properties props) {
-        super.makeTimer(props);
-        setSetTimer(workLength);
-        setCurrentTimer(getSetTimer());
-        drawTimer(props);
-        getPanel().add(modeLabel, "al center, span, wrap");
+    public void initialiseTimer(Properties props) {
+        super.initialiseTimer(props);
+        setTimer(props, PomodoroStatus.WORK, workDuration);
+
+        SKIP_TIMER.addActionListener(e -> nextTimer(props));
+
+        getPanel().add(MODE_LABEL, "al center, span, wrap");
     }
 
     public void updateTimer(Properties props) {
-        if (status.equals(PomodoroStatus.work)) {
+        if (currentStatus.equals(PomodoroStatus.WORK)) {
             startWorkTimer(props);
         } else {
             startBreakTimer(props);
@@ -71,18 +71,12 @@ public class PomodoroTimer extends TimerMeasurer {
         if (!getCurrentTimer().equals(LocalTime.MIN)) {
             setCurrentTimer(getCurrentTimer().minusSeconds(1));
             drawTimer(props);
-        } else if (currentCycle != numberCyclesInterval) {
+        } else if (currentCycle != cyclesBeforeLongBreak) {
             currentCycle++;
-            status = PomodoroStatus.shortBreak;
-            setSetTimer(shortBreakLength);
-            setCurrentTimer(getSetTimer());
-            drawTimer(props);
+            setTimer(props, PomodoroStatus.SHORT_BREAK, shortBreakDuration);
         } else {
             currentCycle = 1;
-            status = PomodoroStatus.longBreak;
-            setSetTimer(longBreakLength);
-            setCurrentTimer(getSetTimer());
-            drawTimer(props);
+            setTimer(props, PomodoroStatus.LONG_BREAK, longBreakDuration);
         }
     }
 
@@ -91,21 +85,45 @@ public class PomodoroTimer extends TimerMeasurer {
             setCurrentTimer(getCurrentTimer().minusSeconds(1));
             drawTimer(props);
         } else {
-            status = PomodoroStatus.work;
-            setSetTimer(workLength);
-            setCurrentTimer(getSetTimer());
-            drawTimer(props);
+            setTimer(props, PomodoroStatus.WORK, workDuration);
         }
     }
 
     public void drawTimer(Properties props) {
-        if (status.equals(PomodoroStatus.work)) {
-            modeLabel.setText(props.getProperty("workText"));
-        } else if (status.equals(PomodoroStatus.shortBreak)) {
-            modeLabel.setText(props.getProperty("shortText"));
-        } else {
-            modeLabel.setText(props.getProperty("longText"));
-        }
+        String modeText = switch (currentStatus) {
+            case WORK -> props.getProperty(WORK_TEXT);
+            case SHORT_BREAK -> props.getProperty(SHORT_BREAK_TEXT);
+            case LONG_BREAK -> props.getProperty(LONG_BREAK_TEXT);
+        };
+        MODE_LABEL.setText(modeText);
         getTimerLabel().setText(getCurrentTimer().format(DateTimeFormatter.ISO_LOCAL_TIME));
+    }
+
+    public void setTimer(Properties props, PomodoroStatus newStatus, LocalTime time) {
+        currentStatus = newStatus;
+        setSetTimer(time);
+        setCurrentTimer(getSetTimer());
+        drawTimer(props);
+    }
+
+    public void nextTimer(Properties props) {
+        // Skip button action listener.
+        getTimerControl().stop();
+
+        if (currentStatus.equals(PomodoroStatus.WORK) && currentCycle == cyclesBeforeLongBreak) {
+            currentCycle = 1;
+            setTimer(props, PomodoroStatus.LONG_BREAK, longBreakDuration);
+        } else if (currentStatus.equals(PomodoroStatus.WORK)) {
+            currentCycle++;
+            setTimer(props, PomodoroStatus.SHORT_BREAK, shortBreakDuration);
+        } else {
+            setTimer(props, PomodoroStatus.WORK, workDuration);
+        }
+    }
+
+    private enum PomodoroStatus {
+        WORK,
+        SHORT_BREAK,
+        LONG_BREAK
     }
 }

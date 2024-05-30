@@ -14,7 +14,7 @@ public class TimerFeature extends TimerMeasurer {
      */
     public TimerFeature(Properties props) {
         super(props);
-        makeTimer(props);
+        initialiseTimer(props);
         createGUI(props);
         addLabels(props);
         addArrowComponents();
@@ -23,8 +23,8 @@ public class TimerFeature extends TimerMeasurer {
     /**
      * Create the timer with button functioning.
      */
-    public void makeTimer(Properties props) {
-        super.makeTimer(props);
+    public void initialiseTimer(Properties props) {
+        super.initialiseTimer(props);
         // Set the timer to start counting down from.
         setSetTimer(LocalTime.of(0, 0, 10));
         setCurrentTimer(getSetTimer());
