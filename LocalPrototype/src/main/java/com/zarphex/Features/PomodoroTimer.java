@@ -139,6 +139,8 @@ public class PomodoroTimer extends TimerMeasurer {
     public void nextTimer(Properties props) {
         // Skip button action listener.
         getTimerControl().stop();
+        adjustLabelColour(timerStatus.revert);
+        getTimerLabel().setEditable(true);
 
         if (currentStatus.equals(PomodoroStatus.WORK) && currentCycle == cyclesBeforeLongBreak) {
             currentCycle = 1;

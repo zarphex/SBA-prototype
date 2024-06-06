@@ -29,12 +29,14 @@ public abstract class Feature {
 
     /**
      * Adjust the size and colours for the interactive button.
-     * @param button: The button to format.
+     * @param buttons: The buttons to format.
      */
-    public void formatButton(JButton button) {
-        button.setPreferredSize(new Dimension(100, 40));
-        button.setBackground(new Color(237, 234, 222));
-        button.setForeground(new Color(128, 0 ,128));
+    public void formatButton(JButton... buttons) {
+        for (JButton button : buttons) {
+            button.setPreferredSize(new Dimension(100, 40));
+            button.setBackground(new Color(237, 234, 222));
+            button.setForeground(new Color(128, 0 ,128));
+        }
     }
 
     /**

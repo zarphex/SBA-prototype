@@ -8,7 +8,6 @@ import java.util.Properties;
  * The main SBA class.
  */
 public class SBAPrototype {
-    private final Feature clock, timer, stopwatch, pomodoroTimer, todoList;
     private final JFrame FRAME;
     private static Feature[] featureList;
 
@@ -23,14 +22,14 @@ public class SBAPrototype {
         createGUI(props);
 
         // Create default features.
-        featureList[0] = clock = new Clock(props);
-        featureList[1] = timer = new TimerFeature(props);
-        featureList[2] = stopwatch = new Stopwatch(props);
-        featureList[3] = pomodoroTimer = new PomodoroTimer(props);
-        featureList[4] = todoList = new TodoList(props);
+        featureList[0] = new Clock(props);
+        featureList[1] = new TimerFeature(props);
+        featureList[2] = new Stopwatch(props);
+        featureList[3] = new PomodoroTimer(props);
+        featureList[4] = new TodoList(props);
 
         // Default display of the clock.
-        FRAME.add(clock.getPanel());
+        FRAME.add(featureList[0].getPanel());
         addFeatureSwapButton(0);
         FRAME.setVisible(true);
     }

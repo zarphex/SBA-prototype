@@ -27,7 +27,7 @@ public class TimerFeature extends TimerMeasurer {
     public void initialiseTimer(Properties props) {
         super.initialiseTimer(props);
         // Set the timer to start counting down from.
-        setSetTimer(LocalTime.of(0, 0, 10));
+        setSetTimer(LocalTime.MIN);
         setCurrentTimer(getSetTimer());
         drawTimer(props);
     }
