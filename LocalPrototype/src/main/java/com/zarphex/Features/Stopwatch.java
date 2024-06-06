@@ -25,7 +25,7 @@ public class Stopwatch extends TimerMeasurer {
         lapsPanel = new JPanel();
         lapsPanel.setBackground(null);
         lapsPanel.setLayout(new BoxLayout(lapsPanel, BoxLayout.Y_AXIS));
-        adjustLabelColour(timerStatus.start);
+        adjustLabelColour(TimerStatus.start);
 
         LAP_STOPWATCH = new JButton(props.getProperty("lapLabel"));
         formatButton(LAP_STOPWATCH);
@@ -46,8 +46,16 @@ public class Stopwatch extends TimerMeasurer {
         setTimerControl(new Timer(1000, e -> updateTimer(props)));
 
         // Button action listeners.
-        getSTART_TIMER().addActionListener(e -> getTimerControl().start());
-        getPAUSE_TIMER().addActionListener(e -> getTimerControl().stop());
+        getSTART_TIMER().addActionListener(e -> {
+            if (getTimerStatus()) {
+                getTimerControl().stop();
+                getSTART_TIMER().setText(props.getProperty("startLabel"));
+            } else {
+                getTimerControl().start();
+                getSTART_TIMER().setText(props.getProperty("pauseLabel"));
+            }
+            setTimerStatus(!getTimerStatus());
+        });
         LAP_STOPWATCH.addActionListener(e -> {
             drawLap(getTimerLabel().getText());
         });
@@ -57,6 +65,8 @@ public class Stopwatch extends TimerMeasurer {
             setCurrentTimer(getSetTimer());
             deleteLaps();
             drawTimer(props);
+            getSTART_TIMER().setText(props.getProperty("startLabel"));
+            setTimerStatus(false);
         });
 
         // Set default stopwatch value.
@@ -73,7 +83,6 @@ public class Stopwatch extends TimerMeasurer {
         // Add labels to the panel.
         getPanel().add(getTimerLabel(), "al center bottom, span, push, wrap");
         getPanel().add(getSTART_TIMER(), "al center, split 4, span");
-        getPanel().add(getPAUSE_TIMER(), "al center, span");
         getPanel().add(LAP_STOPWATCH, "al center, span");
         getPanel().add(getRESET_TIMER(), "al center, span, wrap");
         getPanel().add(lapsPanel, "pos 0.5al 55%");

@@ -31,7 +31,7 @@ public class PomodoroTimer extends TimerMeasurer {
         currentCycle = 1;
 
         MODE_LABEL = new JLabel();
-        MODE_LABEL.setFont(new Font(getFont(), Font.ITALIC, 16));
+        MODE_LABEL.setFont(new Font(getFont(), Font.ITALIC, 24));
         MODE_LABEL.setForeground(new Color(250, 249,246));
 
         SKIP_TIMER = new JButton(props.getProperty(SKIP_BUTTON_TEXT));
@@ -139,8 +139,10 @@ public class PomodoroTimer extends TimerMeasurer {
     public void nextTimer(Properties props) {
         // Skip button action listener.
         getTimerControl().stop();
-        adjustLabelColour(timerStatus.revert);
+        adjustLabelColour(TimerStatus.revert);
         getTimerLabel().setEditable(true);
+        getSTART_TIMER().setText(props.getProperty("startLabel"));
+        setTimerStatus(false);
 
         if (currentStatus.equals(PomodoroStatus.WORK) && currentCycle == cyclesBeforeLongBreak) {
             currentCycle = 1;

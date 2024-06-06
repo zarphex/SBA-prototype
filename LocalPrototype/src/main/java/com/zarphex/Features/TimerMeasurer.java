@@ -10,9 +10,10 @@ import javax.swing.text.MaskFormatter;
  */
 public abstract class TimerMeasurer extends Feature {
     private final JFormattedTextField TIMER_LABEL;
-    private final JButton START_TIMER, PAUSE_TIMER, RESET_TIMER;
+    private final JButton START_TIMER, RESET_TIMER;
     private LocalTime setTimer, currentTimer;
     private Timer timerControl;
+    private boolean isTimerActive;
 
     /**
      * The default constructor.
@@ -24,15 +25,15 @@ public abstract class TimerMeasurer extends Feature {
         // Instantiate all components.
         TIMER_LABEL = new JFormattedTextField(createFormatter("##:##:##"));
         START_TIMER = new JButton(props.getProperty("startLabel"));
-        PAUSE_TIMER = new JButton(props.getProperty("pauseLabel"));
         RESET_TIMER = new JButton(props.getProperty("resetLabel"));
 
         TIMER_LABEL.setFont(new Font(getFont(), Font.BOLD, 60));
-        adjustLabelColour(timerStatus.revert);
+        adjustLabelColour(TimerStatus.revert);
         TIMER_LABEL.setText("00:00:00");
         TIMER_LABEL.setEditable(true);
 
-        formatButton(START_TIMER, PAUSE_TIMER, RESET_TIMER);
+        formatButton(START_TIMER, RESET_TIMER);
+        isTimerActive = false;
     }
 
     /**
@@ -43,7 +44,6 @@ public abstract class TimerMeasurer extends Feature {
         // Add labels to the panel.
         getPanel().add(TIMER_LABEL, "al center bottom, span, push, wrap");
         getPanel().add(START_TIMER, "al center, split, span");
-        getPanel().add(PAUSE_TIMER, "al center, split, span");
         getPanel().add(RESET_TIMER, "al center, split, span, wrap");
     }
 
@@ -57,29 +57,37 @@ public abstract class TimerMeasurer extends Feature {
 
         // Button action listeners.
         getSTART_TIMER().addActionListener(e -> {
-            String[] listOfValues = getTimerLabel().getText().split(":");
-            LocalTime newTime = LocalTime.of(Integer.parseInt(listOfValues[0]),
-                    Integer.parseInt(listOfValues[1]),
-                    Integer.parseInt(listOfValues[2]));
-            setSetTimer(newTime);
-            setCurrentTimer(newTime);
-            if (getCurrentTimer() != LocalTime.MIN) {
-                adjustLabelColour(timerStatus.start);
-                getTimerControl().start();
-                TIMER_LABEL.setEditable(false);
+            if (isTimerActive) {
+                getTimerControl().stop();
+                START_TIMER.setText(props.getProperty("startLabel"));
+            } else {
+                // Format the current time string of the text field.
+                String[] listOfValues = getTimerLabel().getText().split(":");
+                LocalTime newTime = LocalTime.of(Integer.parseInt(listOfValues[0]),
+                        Integer.parseInt(listOfValues[1]),
+                        Integer.parseInt(listOfValues[2]));
+                // Change the set timer and current timer to match.
+                setSetTimer(newTime);
+                setCurrentTimer(newTime);
+                // Start the timer.
+                if (getCurrentTimer() != LocalTime.MIN) {
+                    adjustLabelColour(TimerStatus.start);
+                    getTimerControl().start();
+                    TIMER_LABEL.setEditable(false);
+                    START_TIMER.setText(props.getProperty("pauseLabel"));
+                }
             }
+            setTimerStatus(!isTimerActive);
         });
-        getPAUSE_TIMER().addActionListener(e -> {
-            getTimerControl().stop();
-            adjustLabelColour(timerStatus.revert);
-            TIMER_LABEL.setEditable(true);
-        });
+
         getRESET_TIMER().addActionListener(e -> {
             getTimerControl().stop();
-            adjustLabelColour(timerStatus.revert);
+            adjustLabelColour(TimerStatus.revert);
             setCurrentTimer(getSetTimer());
             drawTimer(props);
             TIMER_LABEL.setEditable(true);
+            START_TIMER.setText(props.getProperty("startLabel"));
+            setTimerStatus(false);
         });
     }
 
@@ -104,11 +112,11 @@ public abstract class TimerMeasurer extends Feature {
      * Styles the main timer label.
      * @param status: The mode to revert to.
      */
-    public void adjustLabelColour(timerStatus status) {
-        if (status.equals(timerStatus.start)) {
+    public void adjustLabelColour(TimerStatus status) {
+        if (status.equals(TimerStatus.start)) {
             TIMER_LABEL.setBackground(null);
             TIMER_LABEL.setForeground(new Color(250, 249,246));
-        } else if (status.equals(timerStatus.revert)) {
+        } else if (status.equals(TimerStatus.revert)) {
             TIMER_LABEL.setBackground(new Color(250, 249,246));
             TIMER_LABEL.setForeground(Color.black);
             TIMER_LABEL.setBorder(null);
@@ -118,7 +126,7 @@ public abstract class TimerMeasurer extends Feature {
     /**
      * The status of the timer label.
      */
-    public enum timerStatus {
+    public enum TimerStatus {
         start,
         revert;
     }
@@ -137,10 +145,6 @@ public abstract class TimerMeasurer extends Feature {
         return START_TIMER;
     }
 
-    public JButton getPAUSE_TIMER() {
-        return PAUSE_TIMER;
-    }
-
     public JButton getRESET_TIMER() {
         return RESET_TIMER;
     }
@@ -157,6 +161,10 @@ public abstract class TimerMeasurer extends Feature {
         return timerControl;
     }
 
+    public boolean getTimerStatus() {
+        return isTimerActive;
+    }
+
     // Setters
     public void setSetTimer(LocalTime setTimer) {
         this.setTimer = setTimer;
@@ -168,5 +176,9 @@ public abstract class TimerMeasurer extends Feature {
 
     public void setTimerControl(Timer timerControl) {
         this.timerControl = timerControl;
+    }
+
+    public void setTimerStatus(boolean status) {
+        isTimerActive = status;
     }
 }
