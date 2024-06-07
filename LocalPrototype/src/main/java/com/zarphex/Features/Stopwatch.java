@@ -1,5 +1,7 @@
 package com.zarphex.Features;
 
+import net.miginfocom.swing.MigLayout;
+
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalTime;
@@ -12,6 +14,7 @@ import java.util.Properties;
 public class Stopwatch extends TimerMeasurer {
     private final JPanel lapsPanel;
     private final JButton LAP_STOPWATCH;
+    private JLabel lapsLabel;
 
     /**
      * Default constructor for the stopwatch.
@@ -23,8 +26,12 @@ public class Stopwatch extends TimerMeasurer {
 
         // Instantiate the components.
         lapsPanel = new JPanel();
+        lapsPanel.setLayout(new MigLayout("al center"));
         lapsPanel.setBackground(null);
-        lapsPanel.setLayout(new BoxLayout(lapsPanel, BoxLayout.Y_AXIS));
+        lapsPanel.setPreferredSize(new Dimension(100, 10));
+        lapsLabel = new JLabel("LAPS");
+        lapsLabel.setForeground(getCREAM_COLOR());
+        lapsPanel.add(lapsLabel, "al center top, span, wrap");
         adjustLabelColour(TimerStatus.start);
 
         LAP_STOPWATCH = new JButton(props.getProperty("lapLabel"));
@@ -81,11 +88,12 @@ public class Stopwatch extends TimerMeasurer {
     @Override
     public void addLabels(Properties props) {
         // Add labels to the panel.
-        getPanel().add(getTimerLabel(), "al center bottom, span, push, wrap");
-        getPanel().add(getSTART_TIMER(), "al center, split 4, span");
-        getPanel().add(LAP_STOPWATCH, "al center, span");
-        getPanel().add(getRESET_TIMER(), "al center, span, wrap");
-        getPanel().add(lapsPanel, "pos 0.5al 55%");
+        getFeaturePanel().add(getTimerLabel(), "pos 0.5al 0.4al");
+        getFeaturePanel().add(getSTART_TIMER(), "pos 0.2al 0.85al");
+        getFeaturePanel().add(LAP_STOPWATCH, "pos 0.5al 0.85al");
+        getFeaturePanel().add(getRESET_TIMER(), "pos 0.8al 0.85al");
+        getBACKGROUND_PANEL().add(lapsPanel, "pos 0.5al 65%");
+        getBACKGROUND_PANEL().add(getFeaturePanel());
     }
 
     /**
@@ -105,7 +113,8 @@ public class Stopwatch extends TimerMeasurer {
         JLabel newLap = new JLabel();
         newLap.setText(lapTime);
         newLap.setFont(new Font(getFont(), Font.PLAIN, 12));
-        lapsPanel.add(newLap);
+        newLap.setForeground(getCREAM_COLOR());
+        lapsPanel.add(newLap, "al center, span, wrap");
         lapsPanel.revalidate();
         lapsPanel.repaint();
     }
@@ -115,6 +124,7 @@ public class Stopwatch extends TimerMeasurer {
      */
     public void deleteLaps() {
         lapsPanel.removeAll();
+        lapsPanel.add(lapsLabel, "al center top, span, wrap");
         lapsPanel.revalidate();
         lapsPanel.repaint();
     }

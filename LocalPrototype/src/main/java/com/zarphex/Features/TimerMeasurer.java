@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.time.LocalTime;
 import java.util.Properties;
-import javax.swing.text.MaskFormatter;
 /**
  * The abstract timer class for all classes using a counting function.
  */
@@ -22,6 +21,8 @@ public abstract class TimerMeasurer extends Feature {
     public TimerMeasurer(Properties props) {
         super(props);
 
+        getFeaturePanel().setPreferredSize(new Dimension(450, 300));
+        getFeaturePanel().setBackground(null);
         // Instantiate all components.
         TIMER_LABEL = new JFormattedTextField(createFormatter("##:##:##"));
         START_TIMER = new JButton(props.getProperty("startLabel"));
@@ -31,6 +32,8 @@ public abstract class TimerMeasurer extends Feature {
         adjustLabelColour(TimerStatus.revert);
         TIMER_LABEL.setText("00:00:00");
         TIMER_LABEL.setEditable(true);
+        TIMER_LABEL.setBackground(getLIGHT_PURPLE_COLOR());
+        TIMER_LABEL.setBorder(null);
 
         formatButton(START_TIMER, RESET_TIMER);
         isTimerActive = false;
@@ -42,9 +45,10 @@ public abstract class TimerMeasurer extends Feature {
      */
     public void addLabels(Properties props) {
         // Add labels to the panel.
-        getPanel().add(TIMER_LABEL, "al center bottom, span, push, wrap");
-        getPanel().add(START_TIMER, "al center, split, span");
-        getPanel().add(RESET_TIMER, "al center, split, span, wrap");
+        getFeaturePanel().add(TIMER_LABEL, "pos 0.5al 0.4al");
+        getFeaturePanel().add(START_TIMER, "pos 0.3al 0.85al");
+        getFeaturePanel().add(RESET_TIMER, "pos 0.7al 0.85al");
+        getBACKGROUND_PANEL().add(getFeaturePanel());
     }
 
     /**
@@ -92,34 +96,14 @@ public abstract class TimerMeasurer extends Feature {
     }
 
     /**
-     * Create a new formatter for the text field.
-     * @param s: The string to take from the text field.
-     * @return The formatter.
-     */
-    public MaskFormatter createFormatter(String s) {
-        MaskFormatter formatter = null;
-        try {
-            formatter = new MaskFormatter(s);
-            formatter.setPlaceholderCharacter('0');
-        } catch (java.text.ParseException exception){
-            System.err.println("Formatter is bad: " + exception.getMessage());
-            System.exit(-1);
-        }
-        return formatter;
-    }
-
-    /**
      * Styles the main timer label.
      * @param status: The mode to revert to.
      */
     public void adjustLabelColour(TimerStatus status) {
         if (status.equals(TimerStatus.start)) {
-            TIMER_LABEL.setBackground(null);
-            TIMER_LABEL.setForeground(new Color(250, 249,246));
+            TIMER_LABEL.setForeground(getCREAM_COLOR());
         } else if (status.equals(TimerStatus.revert)) {
-            TIMER_LABEL.setBackground(new Color(250, 249,246));
             TIMER_LABEL.setForeground(Color.black);
-            TIMER_LABEL.setBorder(null);
         }
     }
 

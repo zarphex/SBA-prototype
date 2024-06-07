@@ -41,9 +41,9 @@ public class TodoList extends Feature {
         description.setBorder(null);
 
         createGUI(props);
-        getPanel().add(title, "al center, span, wrap");
-        getPanel().add(description, "al center, span,, wrap");
-        getPanel().add(listPanel, "al center top, span, push, wrap");
+        getBACKGROUND_PANEL().add(title, "al center, span, wrap");
+        getBACKGROUND_PANEL().add(description, "al center, span,, wrap");
+        getBACKGROUND_PANEL().add(listPanel, "al center top, span, push, wrap");
         addArrowComponents();
     }
 

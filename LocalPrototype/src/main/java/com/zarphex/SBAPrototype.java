@@ -29,7 +29,7 @@ public class SBAPrototype {
         featureList[4] = new TodoList(props);
 
         // Default display of the clock.
-        FRAME.add(featureList[0].getPanel());
+        FRAME.add(featureList[0].getBACKGROUND_PANEL());
         addFeatureSwapButton(0);
         FRAME.setVisible(true);
     }
@@ -67,20 +67,20 @@ public class SBAPrototype {
         // Left arrow button accounting for edge case minimum index.
         leftArrow.addActionListener(e -> {
             int prevIndex = (index - 1 + n) % n;
-            featureList[index].getPanel().setVisible(false);
-            FRAME.remove(featureList[index].getPanel());
-            featureList[prevIndex].getPanel().setVisible(true);
-            FRAME.add(featureList[prevIndex].getPanel());
+            featureList[index].getBACKGROUND_PANEL().setVisible(false);
+            FRAME.remove(featureList[index].getBACKGROUND_PANEL());
+            featureList[prevIndex].getBACKGROUND_PANEL().setVisible(true);
+            FRAME.add(featureList[prevIndex].getBACKGROUND_PANEL());
             addFeatureSwapButton(prevIndex);
         });
 
         // Right arrow button accounting for edge case maximum index.
         rightArrow.addActionListener(e -> {
             int nextIndex = (index + 1) % n;
-            featureList[index].getPanel().setVisible(false);
-            FRAME.remove(featureList[index].getPanel());
-            featureList[nextIndex].getPanel().setVisible(true);
-            FRAME.add(featureList[nextIndex].getPanel());
+            featureList[index].getBACKGROUND_PANEL().setVisible(false);
+            FRAME.remove(featureList[index].getBACKGROUND_PANEL());
+            featureList[nextIndex].getBACKGROUND_PANEL().setVisible(true);
+            FRAME.add(featureList[nextIndex].getBACKGROUND_PANEL());
             addFeatureSwapButton(nextIndex);
         });
     }

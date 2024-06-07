@@ -45,7 +45,6 @@ public class PomodoroTimer extends TimerMeasurer {
         createGUI(props);
         initialiseTimer(props);
         addLabels(props);
-        getPanel().add(SKIP_TIMER, "al center, span, wrap");
         addArrowComponents();
     }
 
@@ -59,8 +58,18 @@ public class PomodoroTimer extends TimerMeasurer {
         setTimer(props, PomodoroStatus.WORK, workDuration);
 
         SKIP_TIMER.addActionListener(e -> nextTimer(props));
+    }
 
-        getPanel().add(MODE_LABEL, "al center, span, wrap");
+    @Override
+    public void addLabels(Properties props) {
+        // Add labels to the panel.
+        getFeaturePanel().add(MODE_LABEL, "pos 0.5al 5%");
+        getFeaturePanel().add(getTimerLabel(), "pos 0.5al 0.4al");
+        getFeaturePanel().add(getSTART_TIMER(), "pos 0.2al 0.85al");
+        getFeaturePanel().add(SKIP_TIMER, "pos 0.5al 0.85al");
+        getFeaturePanel().add(getRESET_TIMER(), "pos 0.8al 0.85al");
+
+        getBACKGROUND_PANEL().add(getFeaturePanel());
     }
 
     /**
@@ -158,7 +167,7 @@ public class PomodoroTimer extends TimerMeasurer {
     /**
      * Enumeration options for the status of the timer.
      */
-    private enum PomodoroStatus {
+    public enum PomodoroStatus {
         WORK,
         SHORT_BREAK,
         LONG_BREAK

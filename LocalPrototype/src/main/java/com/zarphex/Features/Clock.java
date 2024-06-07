@@ -22,10 +22,14 @@ public class Clock extends Feature {
      */
     public Clock(Properties props) {
         super(props);
-        this.isTwentyFourHour = false;
+        isTwentyFourHour = false;
 
-        FORMAT_CHANGE_BUTTON = new JButton(props.getProperty("formatChangeText"));
-        formatButton(FORMAT_CHANGE_BUTTON);
+        getFeaturePanel().setPreferredSize(new Dimension(600, 200));
+        ImageIcon imageicon = new ImageIcon(props.getProperty("settingCogImage"));
+        Image settingCogImage = imageicon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        FORMAT_CHANGE_BUTTON = new JButton(new ImageIcon(settingCogImage));
+        FORMAT_CHANGE_BUTTON.setBackground(null);
+        FORMAT_CHANGE_BUTTON.setBorder(null);
 
         createGUI(props);
     }
@@ -40,9 +44,11 @@ public class Clock extends Feature {
         makeClock();
 
         // Add components to the panel.
-        getPanel().add(CLOCK_LABEL, "al center bottom, pushy, span, wrap");
-        getPanel().add(DATE_LABEL, "al center, span, wrap");
-        getPanel().add(FORMAT_CHANGE_BUTTON, "al center, gapy 20, span, wrap");
+        getBACKGROUND_PANEL().add(FORMAT_CHANGE_BUTTON, "al right, gap 20, span, wrap");
+        getFeaturePanel().setBackground(null);
+        getFeaturePanel().add(CLOCK_LABEL, "pos 0.5al 0.5al, span, wrap");
+        getFeaturePanel().add(DATE_LABEL, "pos 0.5al 0.9al, span, wrap");
+        getBACKGROUND_PANEL().add(getFeaturePanel(), "al center, span, wrap");
 
         addArrowComponents();
     }
@@ -57,9 +63,9 @@ public class Clock extends Feature {
 
         // Format components.
         CLOCK_LABEL.setFont(new Font(getFont(), Font.BOLD, 60));
-        CLOCK_LABEL.setForeground(new Color(250, 249,246));
+        CLOCK_LABEL.setForeground(getCREAM_COLOR());
         DATE_LABEL.setFont(new Font(getFont(), Font.BOLD, 18));
-        DATE_LABEL.setForeground(new Color(250, 249,246));
+        DATE_LABEL.setForeground(getCREAM_COLOR());
         FORMAT_CHANGE_BUTTON.addActionListener(e -> changeMode());
 
         // Create and start the timer.
